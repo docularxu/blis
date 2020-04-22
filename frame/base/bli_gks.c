@@ -129,6 +129,11 @@ void bli_gks_init( void )
 #endif
 
 		// ARM architectures
+#ifdef BLIS_CONFIG_KUNPENG920SVE
+		bli_gks_register_cntx( BLIS_ARCH_KUNPENG920SVE,   bli_cntx_init_kunpeng920sve,
+		                                              bli_cntx_init_kunpeng920sve_ref,
+		                                              bli_cntx_init_kunpeng920sve_ind );
+#endif
 #ifdef BLIS_CONFIG_THUNDERX2
 		bli_gks_register_cntx( BLIS_ARCH_THUNDERX2,   bli_cntx_init_thunderx2,
 		                                              bli_cntx_init_thunderx2_ref,
