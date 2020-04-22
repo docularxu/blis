@@ -129,6 +129,11 @@ void bli_gks_init( void )
 #endif
 
 		// ARM architectures
+#ifdef BLIS_CONFIG_TSV200
+		bli_gks_register_cntx( BLIS_ARCH_TSV200,   bli_cntx_init_tsv200,
+		                                              bli_cntx_init_tsv200_ref,
+		                                              bli_cntx_init_tsv200_ind );
+#endif
 #ifdef BLIS_CONFIG_THUNDERX2
 		bli_gks_register_cntx( BLIS_ARCH_THUNDERX2,   bli_cntx_init_thunderx2,
 		                                              bli_cntx_init_thunderx2_ref,

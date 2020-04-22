@@ -1000,6 +1000,7 @@ typedef enum
 	BLIS_ARCH_BULLDOZER,
 
 	// ARM
+	BLIS_ARCH_TSV200,
 	BLIS_ARCH_THUNDERX2,
 	BLIS_ARCH_CORTEXA57,
 	BLIS_ARCH_CORTEXA53,
@@ -1018,7 +1019,7 @@ typedef enum
 
 // NOTE: This value must be updated to reflect the number of enum values
 // listed above for arch_t!
-#define BLIS_NUM_ARCHS 21
+#define BLIS_NUM_ARCHS 22
 
 
 //
