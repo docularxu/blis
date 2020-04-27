@@ -32,46 +32,4 @@
 
 */
 
-#include "blis.h"
-
-void bli_cntx_init_kunpeng920sve( cntx_t* cntx )
-{
-	blksz_t blkszs[ BLIS_NUM_BLKSZS ];
-
-	// Set default kernel blocksizes and functions.
-	bli_cntx_init_kunpeng920sve_ref( cntx );
-
-	// -------------------------------------------------------------------------
-
-	// Update the context with optimized native gemm micro-kernels and
-	// their storage preferences.
-	bli_cntx_set_l3_nat_ukrs
-	(
-	  2,
-	  BLIS_GEMM_UKR, BLIS_FLOAT,    bli_sgemm_armv8a_asm_8x12,    FALSE,
-	  BLIS_GEMM_UKR, BLIS_DOUBLE,   bli_dgemm_armsve256_asm_8x8,  FALSE,
-	  cntx
-	);
-
-	// Initialize level-3 blocksize objects with architecture-specific values.
-	//                                           s      d      c      z
-	bli_blksz_init_easy( &blkszs[ BLIS_MR ],     8,     8,    -1,    -1 );
-	bli_blksz_init_easy( &blkszs[ BLIS_NR ],    12,     8,    -1,    -1 );
-	bli_blksz_init_easy( &blkszs[ BLIS_MC ],   120,    32,    -1,    -1 );
-	bli_blksz_init_easy( &blkszs[ BLIS_KC ],   640,   256,    -1,    -1 );
-	bli_blksz_init_easy( &blkszs[ BLIS_NC ],  3072,  3072,    -1,    -1 );
-
-	// Update the context with the current architecture's register and cache
-	// blocksizes (and multiples) for native execution.
-	bli_cntx_set_blkszs
-	(
-	  BLIS_NAT, 5,
-	  BLIS_NC, &blkszs[ BLIS_NC ], BLIS_NR,
-	  BLIS_KC, &blkszs[ BLIS_KC ], BLIS_KR,
-	  BLIS_MC, &blkszs[ BLIS_MC ], BLIS_MR,
-	  BLIS_NR, &blkszs[ BLIS_NR ], BLIS_NR,
-	  BLIS_MR, &blkszs[ BLIS_MR ], BLIS_MR,
-	  cntx
-	);
-}
-
+GEMM_UKR_PROT( double,   d, gemm_armsve256_asm_8x8 )
