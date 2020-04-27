@@ -53,6 +53,14 @@ void bli_cntx_init_kunpeng920sve( cntx_t* cntx )
 	  cntx
 	);
 
+	// Update the context with optimized packm kernels.
+	bli_cntx_set_packm_kers
+	(
+	  1,
+	  BLIS_PACKM_8XK_KER,  BLIS_DOUBLE, bli_dpackm_armsve256_asm_8xk,
+	  cntx
+	);
+
 	// Initialize level-3 blocksize objects with architecture-specific values.
 	//                                           s      d      c      z
 	bli_blksz_init_easy( &blkszs[ BLIS_MR ],     8,     8,    -1,    -1 );
