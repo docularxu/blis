@@ -33,3 +33,5 @@
 */
 
 GEMM_UKR_PROT( double,   d, gemm_armsve256_asm_8x8 )
+
+PACKM_KER_PROT( double,   d, packm_armsve256_asm_8xk )

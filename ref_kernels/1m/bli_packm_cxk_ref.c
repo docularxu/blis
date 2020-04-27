@@ -33,6 +33,7 @@
 */
 
 #include "blis.h"
+#include "stdio.h"
 
 #undef  GENTFUNC
 #define GENTFUNC( ctype, ch, opname, mnr, arch, suf ) \
@@ -661,6 +662,13 @@ void PASTEMAC3(ch,opname,arch,suf) \
 \
 	dim_t           n_iter     = n / 2; \
 	dim_t           n_left     = n % 2; \
+\
+	printf("GD: in packm_8xk() %s \n", __func__); \
+	printf("          conja=%d; schema=%d\n", conja, schema); \
+	printf("          cdim=%d; n=%d; n_max=%d\n", cdim, n, n_max); \
+	printf("          kappa=%f\n", *kappa_cast); \
+	printf("          a=0x%x; inca=%d, lda=%d\n", a, inca, lda); \
+	printf("          p=0x%x, ldp=%d; cntx=0x%x\n", p, ldp, cntx); \
 \
 	if ( cdim == mnr ) \
 	{ \

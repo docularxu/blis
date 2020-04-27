@@ -37,6 +37,7 @@
 */
 
 #include "blis.h"
+#include "stdio.h"
 
 /*
    o 8x8 Double precision micro-kernel
@@ -69,6 +70,10 @@ void bli_dgemm_armsve256_asm_8x8
 	uint64_t k_left = k0 % 4;
 	uint64_t rs_c   = rs_c0;
 	uint64_t cs_c   = cs_c0;
+        printf("in function: %s()\n", __func__);
+        printf("  k0=%d, alpha=%f, beta=%f\n", k0, *alpha, *beta);
+	printf("  a=0x%x, b=0x%x\n", a, b);
+	printf("  c=0x%x, rs_c0=%d, cs_c0+%d\n", c, rs_c0, cs_c0);
 
 __asm__ volatile
 (
