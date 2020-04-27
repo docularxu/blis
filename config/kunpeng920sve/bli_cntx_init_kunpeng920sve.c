@@ -52,7 +52,7 @@ void bli_cntx_init_kunpeng920sve( cntx_t* cntx )
 	  BLIS_GEMM_UKR, BLIS_DOUBLE,   bli_dgemm_armsve256_asm_8x8,  FALSE,
 	  cntx
 	);
-#if 0
+#if 1
 	// Update the context with optimized packm kernels.
 	bli_cntx_set_packm_kers
 	(
