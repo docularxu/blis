@@ -70,8 +70,8 @@ void bli_dgemm_armsve256_asm_8x8
 
 __asm__ volatile
 (
-"                                            \n\t" 
-" ldr x0,%[aaddr]                            \n\t" // Load address of A 
+"                                            \n\t"
+" ldr x0,%[aaddr]                            \n\t" // Load address of A
 " ldr x1,%[baddr]                            \n\t" // Load address of B
 " ldr x2,%[caddr]                            \n\t" // Load address of C
 "                                            \n\t"
@@ -80,15 +80,15 @@ __asm__ volatile
 "                                            \n\t"
 " ldr x5,%[k_iter]                           \n\t" // Init guard (k_iter)
 " ldr x6,%[k_left]                           \n\t" // Init guard (k_iter)
-"                                            \n\t" 
-" ldr x7,%[alpha]                            \n\t" // Alpha address      
-" ldr x8,%[beta]                             \n\t" // Beta address      
-"                                            \n\t" 
+"                                            \n\t"
+" ldr x7,%[alpha]                            \n\t" // Alpha address
+" ldr x8,%[beta]                             \n\t" // Beta address
+"                                            \n\t"
 " ldr x9,%[cs_c]                             \n\t" // Load cs_c
 " lsl x10,x9,#3                              \n\t" // cs_c * sizeof(double)
 "                                            \n\t"
 " ldr x13,%[rs_c]                            \n\t" // Load rs_c.
-" lsl x14,x13,#3                             \n\t" // rs_c * sizeof(double). 
+" lsl x14,x13,#3                             \n\t" // rs_c * sizeof(double).
 "                                            \n\t"
 " add x20,x2,x10                             \n\t" //Load address Column 1 of C
 " add x21,x20,x10                            \n\t" //Load address Column 2 of C
@@ -107,19 +107,12 @@ __asm__ volatile
 " prfm pldl1keep,[x25]                       \n\t" // Prefetch c.
 " prfm pldl1keep,[x26]                       \n\t" // Prefetch c.
 "                                            \n\t"
-" ldr  z0, [x0]                              \n\t" // Load a
-" ldr  z1, [x0, #1, MUL VL]                  \n\t"
-"                                            \n\t"
-" ptrue   p0.d, all                          \n\t"
-" ld1rqd  {z2.d}, p0/z, [x1]                 \n\t" // load b( l,0:1 )
-" ld1rqd  {z3.d}, p0/z, [x1, #16]            \n\t" // load b( l,2:3 )
-" ld1rqd  {z4.d}, p0/z, [x1, #32]            \n\t" // load b( l,4:5 )
-" ld1rqd  {z5.d}, p0/z, [x1, #48]            \n\t" // load b( l,6:7 )
-"                                            \n\t"
 "                                            \n\t" // PRFM, the following prefetch on [x1] and [x0]
 "                                            \n\t" //   is for b rows 4..7 and a columns 4..7.
 "                                            \n\t" //   both of them will be used in next iteration
 "                                            \n\t" //   of k_iter (unrolled per 4 loops)
+"                                            \n\t"
+" ptrue   p0.d, all                          \n\t"
 "                                            \n\t"
 " dup  z16.d, #0                             \n\t" // Vector for accummulating column 0
 " prfm    PLDL1KEEP, [x1, #256]              \n\t" // prefetch b row no.4
@@ -129,7 +122,7 @@ __asm__ volatile
 " prfm    PLDL1KEEP, [x1, #384]              \n\t" // prefetch b row no.6
 " dup  z19.d, #0                             \n\t" // Vector for accummulating column 1
 " prfm    PLDL1KEEP, [x1, #448]              \n\t" // preftech b row no.7
-" dup  z20.d, #0                             \n\t" // Vector for accummulating column 2 
+" dup  z20.d, #0                             \n\t" // Vector for accummulating column 2
 " dup  z21.d, #0                             \n\t" // Vector for accummulating column 2
 "                                            \n\t"
 " dup  z22.d, #0                             \n\t" // Vector for accummulating column 3
@@ -140,7 +133,7 @@ __asm__ volatile
 " prfm    PLDL1KEEP, [x0, #384]              \n\t" // prefetch a col. no.6
 " dup  z25.d, #0                             \n\t" // Vector for accummulating column 4
 " prfm    PLDL1KEEP, [x0, #448]              \n\t" // prefetch a col. no.7
-" dup  z26.d, #0                             \n\t" // Vector for accummulating column 5 
+" dup  z26.d, #0                             \n\t" // Vector for accummulating column 5
 " dup  z27.d, #0                             \n\t" // Vector for accummulating column 5
 "                                            \n\t"
 " dup  z28.d, #0                             \n\t" // Vector for accummulating column 6
@@ -152,10 +145,17 @@ __asm__ volatile
 " cmp x5,#0                                  \n\t" // If k_iter == 0, jump to k_left.
 " beq .DCONSIDERKLEFT                        \n\t"
 "                                            \n\t"
+" ldr  z0, [x0]                              \n\t" // Load a
+" ldr  z1, [x0, #1, MUL VL]                  \n\t"
 " add x0, x0, #64                            \n\t" //update address of A
+"                                            \n\t"
+" ld1rqd  {z2.d}, p0/z, [x1]                 \n\t" // load b( l,0:1 )
+" ld1rqd  {z3.d}, p0/z, [x1, #16]            \n\t" // load b( l,2:3 )
+" ld1rqd  {z4.d}, p0/z, [x1, #32]            \n\t" // load b( l,4:5 )
+" ld1rqd  {z5.d}, p0/z, [x1, #48]            \n\t" // load b( l,6:7 )
 " add x1, x1, #64                            \n\t" //update address of B
 "                                            \n\t"
-" cmp x5,1                                   \n\t" // If there is just one k_iter, jump to that one. 
+" cmp x5,1                                   \n\t" // If there is just one k_iter, jump to that one.
 " beq .DLASTITER                             \n\t" // (as loop is do-while-like).
 "                                            \n\t"
 " DLOOP:                                     \n\t" // Body
@@ -425,7 +425,7 @@ __asm__ volatile
 "                                            \n\t"                  //End it 4
 " add x0, x0, #192                           \n\t"
 "                                            \n\t"
-" .DCONSIDERKLEFT:                           \n\t" 
+" .DCONSIDERKLEFT:                           \n\t"
 " cmp x6,0                                   \n\t" // If k_left == 0, we are done.
 " beq .DPOSTACCUM                            \n\t" // else, we enter the k_left loop.
 "                                            \n\t"
@@ -616,7 +616,7 @@ __asm__ volatile
 " .DGENSTORED:                               \n\t" // C is general-stride stored.
 "                                            \n\t"
 "                                            \n\t" // x14 is row-stride in number of bytes.
-" lsl x15,x14,#2                             \n\t" // x15 is 4-row-stride, which is the address offset 
+" lsl x15,x14,#2                             \n\t" // x15 is 4-row-stride, which is the address offset
 "                                            \n\t" //     btw c(4,*) and c(0,*)
 " index z4.d, xzr, x14                       \n\t" // z4  is address offsets of four contiguous elements
 "                                            \n\t" //     in a column. such as c( 0:3,* ).
@@ -794,7 +794,7 @@ __asm__ volatile
  "x7","x8","x9",
  "x10","x11","x12","x13","x14","x15","x16","x17","x18","x19",
  "x20","x21","x22","x23","x24","x25","x26",
- "x27",       
+ "x27",
  "v0","v1","v2",
  "v3","v4","v5",
  "v6","v7","v8",
