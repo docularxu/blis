@@ -130,6 +130,9 @@ void bli_arch_set_id( void )
 #endif
 
 	// ARM microarchitectures.
+#ifdef BLIS_FAMILY_A64FX
+	id = BLIS_ARCH_A64FX;
+#endif
 #ifdef BLIS_FAMILY_TSV200
 	id = BLIS_ARCH_TSV200;
 #endif
@@ -195,6 +198,7 @@ static char* config_name[ BLIS_NUM_ARCHS ] =
     "piledriver",
     "bulldozer",
 
+    "a64fx",
     "tsv200",
     "thunderx2",
     "cortexa57",

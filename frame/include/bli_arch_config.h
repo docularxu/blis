@@ -83,6 +83,9 @@ CNTX_INIT_PROTS( bulldozer )
 
 // -- ARM architectures --
 
+#ifdef BLIS_CONFIG_A64FX
+CNTX_INIT_PROTS( a64fx )
+#endif
 #ifdef BLIS_CONFIG_TSV200
 CNTX_INIT_PROTS( tsv200 )
 #endif
@@ -183,6 +186,9 @@ CNTX_INIT_PROTS( generic )
 
 // -- ARM architectures --
 
+#ifdef BLIS_FAMILY_A64FX
+#include "bli_family_a64fx.h"
+#endif
 #ifdef BLIS_FAMILY_TSV200
 #include "bli_family_tsv200.h"
 #endif
